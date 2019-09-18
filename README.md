@@ -6,6 +6,8 @@
 
 Data is organized into subfolders by simulation ids. For example, folder `data243` contains the motion state of the system from simulation `243`. In each folder, each txt file contains the system state of a particular step, marked by the numerical id in the file name, e.g. `position50.txt` being the state of the system at step `50`. The four columns in the txt file represents $x, y, v_x, v_y$, while the rows corresponds to particles.
 
+To enable proper data saving of the C++ script, a separate bash script `run.sh` is written to create the necessary folder structure as well as compiling the code and running it. It serves as a template that the user may change as needed.
+
 ## Data aggregation script
 
 `combine_data.py` aggregates the output txt files from the data generation script to produce a single `.npy` data file, with the shape `[S, T, N, D]`, where `S` is the number of simulaitons, `T` is the number of time steps, `N` is the number of particles, and `D` is the dimension of state vector $(x, y, vx, vy)$.
