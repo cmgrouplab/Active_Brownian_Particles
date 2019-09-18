@@ -4,14 +4,14 @@
 #include <random>
 
 //************* Set Parameters **************
-const int NUMSIMS = 20;     // Number of simulations
-const double DELTATIME = 1; // particles[i].position[0] += DELTATIME * particles[i].velocity[0]
-const int STEP = 1000;      // Number of movement steps
-const int TICK = 10;        // Number of steps between each save file
+const int NUMSIMS = 10000; // Number of simulations
+const int STEP = 1000;     // Number of movement steps
+const int TICK = 10;       // Number of steps between each save file
 
 const double LENGTH = 1;    // Length of box
 const double DENSITY = 0.4; // Density of system
 const double RADIUS = 0.1;  // Radius of particles
+const double DELTATIME = 1; // particles[i].position[0] += DELTATIME * particles[i].velocity[0]
 const double V = 0.01;      //Initial velocity
 
 const double PI = 3.1415926;
@@ -259,6 +259,7 @@ int main()
     for (int simID = 1; simID <= NUMSIMS; simID++)
     {
         simulation(simID);
+        std::cout << "Simulation " << simID << " out of " << NUMSIMS << std::endl;
     }
     // endTime = omp_get_wtime();
     // std::cout << "Total time: " << endTime - startTime << " s" << std::endl;

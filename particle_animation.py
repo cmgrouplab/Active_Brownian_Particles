@@ -4,19 +4,29 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
 
-TICK = 10  # Number of steps between each save file
-MAX_STEPS = 1000  # Number of movement steps
-RADIUS = 0.1  # Radius of particles
-LENGTH = 1  # Length of box
 
-INTERVAL = 100  # Time interval between frames in ms
-FIGSIZE = 10
+parser = argparse.ArgumentParser()
+parser.add_argument('--data-dir', type=str, default='.')
+parser.add_argument('--save-dir', type=str, default='.')
+parser.add_argument('--steps', type=int,
+                    help="number of movement steps")
+parser.add_argument('--tick', type=int,
+                    help="number of steps between each save file")
+parser.add_argument('--radius', type=float, default=0.1,
+                    help="radius of particles")
+parser.add_argument('--length', type=float, default=1.0,
+                    help="box length")
+parser.add_argument('--interval', type=int, default=100,
+                    help="time interval between animation frames in miliseconds")
+parser.add_argument('--figsize', type=int, default=10,
+                    help="figure size")
+args = parser.parse_args()
 
 
 def animate_data(data, region, savedir):
     plt.rcParams['animation.html'] = 'html5'
 
-    fig, ax = plt.subplots(figsize=(FIGSIZE, FIGSIZE))
+    fig, ax = plt.subplots(figsize=(args.figsize, args.figsize))
 
     xmin, xmax, ymin, ymax = region
     ax.set_xlim(xmin, xmax)
@@ -35,13 +45,13 @@ def animate_data(data, region, savedir):
         else:
             for position in data[i]:
                 patches.append(ax.add_patch(plt.Circle(
-                    (position[0], position[1]), RADIUS, edgecolor='b', facecolor='y')))
+                    (position[0], position[1]), args.radius, edgecolor='b', facecolor='y')))
 
-        ax.set_title(f"Step={i*TICK}")
+        ax.set_title(f"Step={i*args.tick}")
         return patches
 
     anim = animation.FuncAnimation(fig, animate, init_func=init,
-                                   frames=len(data), interval=INTERVAL, blit=True)
+                                   frames=len(data), interval=args.interval, blit=True)
 
     if not os.path.exists(savedir):
         os.mkdir(savedir)
@@ -50,13 +60,7 @@ def animate_data(data, region, savedir):
               dpi=80, writer='imagemagick')
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--data-dir', type=str, default='')
-parser.add_argument('--save-dir', type=str, default='')
-args = parser.parse_args()
-
-
-files = [f"position{i}.txt" for i in range(0, MAX_STEPS+1, TICK)]
+files = [f"position{i}.txt" for i in range(0, args.steps+1, args.tick)]
 all_data = [np.loadtxt(os.path.join(args.data_dir, f)) for f in files]
 
-animate_data(all_data, [0, LENGTH, 0, LENGTH], args.save_dir)
+animate_data(all_data, [0, args.length, 0, args.length], args.save_dir)
